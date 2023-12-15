@@ -1,18 +1,23 @@
 stages:
   - fetch_code
   - install_dependencies
-  - pulumi_preview
+#  - pulumi_preview
   - pulumi_up
   # Uncomment the following stage if needed
   # - execute_kubernetes_yaml
 
 variables:
   AWS_REGION: 'us-east-1'
-  PULUMI_STACK: 'ec2automation-s3'
-  GITHUB_REPO_URL: 'https://github.com/BimanAdmin/ec2automation.git'
-  PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-new'
-  PATH: "/var/lib/jenkins/.pulumi/bin:$PATH"
+  AWS_ACCESS_KEY_ID: '$(AWS_ACCESS_KEY_ID)'
+  AWS_SECRET_ACCESS_KEY: '$(AWS_SECRET_ACCESS_KEY)'
+  AWS_CREDENTIALS_ID: '$(AWS_CREDENTIALS_ID)'
+  PULUMI_STACK: 'ec2automation-s3-gitlab'
+  GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
+  PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
+  PATH: "/var/lib/jenkins/.pulumi/bin:$PATH" # Installation Path for Pulumi on Jenkins ec2 machine
   npm_PATH: "/usr/share/npm:$npm_PATH"
+  PULUMI_CONFIG_PASSPHRASE: '$(PULUMI_CONFIG_PASSPHRASE)'
+  PULUMI_ACCESS_TOKEN: '$(PULUMI_ACCESS_TOKEN)'
   NODE_VERSION: '14'
 
 before_script:
@@ -23,7 +28,7 @@ fetch_code:
   stage: fetch_code
   script:
     - echo 'Fetching code from GitHub'
-    - git clone -b main-new $GITHUB_REPO_URL
+    - git clone -b master $GITHUB_REPO_URL
 
 install_dependencies:
   stage: install_dependencies
@@ -31,15 +36,15 @@ install_dependencies:
     - curl -fsSL https://get.pulumi.com | sh
     - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
 
-pulumi_preview:
-  stage: pulumi_preview
-  script:
-    - echo 'Running Pulumi Preview'
-    - pulumi preview --json > pulumi-preview-output.json
-    - pulumi stack export > pulumi-current-state.json
-    - aws s3 cp pulumi-current-state.json s3://${PULUMI_STATE_BUCKET}/pulumi-current-state.json
-    # Add logic to filter changes as per the Jenkins pipeline code
-    - cat pulumi-preview-output.json
+# pulumi_preview:
+#   stage: pulumi_preview
+#   script:
+#     - echo 'Running Pulumi Preview'
+#     - pulumi preview --json > pulumi-preview-output.json
+#     - pulumi stack export > pulumi-current-state.json
+#     - aws s3 cp pulumi-current-state.json s3://${PULUMI_STATE_BUCKET}/pulumi-current-state.json
+#     # Add logic to filter changes as per the Jenkins pipeline code
+#     - cat pulumi-preview-output.json
 
 pulumi_up:
   stage: pulumi_up
@@ -51,7 +56,9 @@ pulumi_up:
     - export AWS_ACCESS_KEY_ID=$(cat $AWS_ACCESS_KEY_ID_FILE)
     - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY_FILE)
     - pulumi login s3://sandbox-pulumi-state-new?region=us-east-1
-    - pulumi stack select ${PULUMI_STACK}
+    - stackList=$(pulumi stack ls --json | tr -d '\n')
+    - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
+    - if [ "$stackExists" == "false" ]; then pulumi stack init $PULUMI_STACK; else pulumi stack select $PULUMI_STACK; fi
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - sudo apt update
@@ -61,17 +68,6 @@ pulumi_up:
     - npm install @pulumi/pulumi && npm install @pulumi/aws
     - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
     - ./pulumi-up.sh
-
-# Uncomment the following section if the Kubernetes deployment is required
-# execute_kubernetes_yaml:
-#   stage: execute_kubernetes_yaml
-#   script:
-#     - echo 'Applying Kubernetes YAML files to the cluster'
-#     - aws eks --region "${REGION}" update-kubeconfig --name "${CLUSTER_NAME}"
-#     - kubectl apply -f StorageClass.yaml
-#     - kubectl apply -f pvc.yaml
-#     - kubectl apply -f Statefulset.yaml
-#     - kubectl apply -f Service.yaml
 
 post_pipeline:
   script:
