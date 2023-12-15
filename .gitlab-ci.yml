@@ -3,6 +3,7 @@ stages:
   - install_dependencies
 #  - pulumi_preview
   - pulumi_up
+  - post_pipeline
   # Uncomment the following stage if needed
   # - execute_kubernetes_yaml
 
@@ -70,6 +71,7 @@ pulumi_up:
     - ./pulumi-up.sh
 
 post_pipeline:
+stage: post_pipeline
   script:
     - echo 'Post-pipeline actions'
     - if [ "$CI_COMMIT_RESULT" != "success" ]; then pulumi destroy --yes; fi
