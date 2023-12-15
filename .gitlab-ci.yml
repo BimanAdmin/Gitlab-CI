@@ -71,7 +71,7 @@ pulumi_up:
     - ./pulumi-up.sh
 
 post_pipeline:
-stage: post_pipeline
+  stage: post_pipeline
   script:
     - echo 'Post-pipeline actions'
     - if [ "$CI_COMMIT_RESULT" != "success" ]; then pulumi destroy --yes; fi
