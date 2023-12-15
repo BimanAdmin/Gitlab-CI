@@ -1,0 +1,3 @@
+name: gitlab-ec2-automation
+runtime: nodejs
+description: A minimal AWS TypeScript Pulumi program

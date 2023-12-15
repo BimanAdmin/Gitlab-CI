@@ -1,0 +1,79 @@
+stages:
+  - fetch_code
+  - install_dependencies
+  - pulumi_preview
+  - pulumi_up
+  # Uncomment the following stage if needed
+  # - execute_kubernetes_yaml
+
+variables:
+  AWS_REGION: 'us-east-1'
+  PULUMI_STACK: 'ec2automation-s3'
+  GITHUB_REPO_URL: 'https://github.com/BimanAdmin/ec2automation.git'
+  PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-new'
+  PATH: "/var/lib/jenkins/.pulumi/bin:$PATH"
+  npm_PATH: "/usr/share/npm:$npm_PATH"
+  NODE_VERSION: '14'
+
+before_script:
+  - apt-get update -qy
+  - apt-get install -y curl
+
+fetch_code:
+  stage: fetch_code
+  script:
+    - echo 'Fetching code from GitHub'
+    - git clone -b main-new $GITHUB_REPO_URL
+
+install_dependencies:
+  stage: install_dependencies
+  script:
+    - curl -fsSL https://get.pulumi.com | sh
+    - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
+
+pulumi_preview:
+  stage: pulumi_preview
+  script:
+    - echo 'Running Pulumi Preview'
+    - pulumi preview --json > pulumi-preview-output.json
+    - pulumi stack export > pulumi-current-state.json
+    - aws s3 cp pulumi-current-state.json s3://${PULUMI_STATE_BUCKET}/pulumi-current-state.json
+    # Add logic to filter changes as per the Jenkins pipeline code
+    - cat pulumi-preview-output.json
+
+pulumi_up:
+  stage: pulumi_up
+  script:
+    - echo 'Running Pulumi Up'
+    - echo '#!/bin/bash' > pulumi-up.sh
+    - echo 'pulumi up --yes' >> pulumi-up.sh
+    - chmod +x pulumi-up.sh
+    - export AWS_ACCESS_KEY_ID=$(cat $AWS_ACCESS_KEY_ID_FILE)
+    - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY_FILE)
+    - pulumi login s3://sandbox-pulumi-state-new?region=us-east-1
+    - pulumi stack select ${PULUMI_STACK}
+    - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+    - sudo apt-get install -y nodejs
+    - sudo apt update
+    - npm install
+    - node -v
+    - npm -v
+    - npm install @pulumi/pulumi && npm install @pulumi/aws
+    - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
+    - ./pulumi-up.sh
+
+# Uncomment the following section if the Kubernetes deployment is required
+# execute_kubernetes_yaml:
+#   stage: execute_kubernetes_yaml
+#   script:
+#     - echo 'Applying Kubernetes YAML files to the cluster'
+#     - aws eks --region "${REGION}" update-kubeconfig --name "${CLUSTER_NAME}"
+#     - kubectl apply -f StorageClass.yaml
+#     - kubectl apply -f pvc.yaml
+#     - kubectl apply -f Statefulset.yaml
+#     - kubectl apply -f Service.yaml
+
+post_pipeline:
+  script:
+    - echo 'Post-pipeline actions'
+    - if [ "$CI_COMMIT_RESULT" != "success" ]; then pulumi destroy --yes; fi
