@@ -30,12 +30,16 @@ fetch_code:
   script:
     - echo 'Fetching code from GitHub'
     - git clone -b master $GITHUB_REPO_URL
+  tags: 
+    - test
 
 install_dependencies:
   stage: install_dependencies
   script:
     - curl -fsSL https://get.pulumi.com | sh
     - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
+  tags: 
+    - test
 
 # pulumi_preview:
 #   stage: pulumi_preview
@@ -69,6 +73,8 @@ pulumi_up:
     - npm install @pulumi/pulumi && npm install @pulumi/aws
     - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
     - ./pulumi-up.sh
+  tags: 
+    - test
 
 post_pipeline:
   stage: post_pipeline
