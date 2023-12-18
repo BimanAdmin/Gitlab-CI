@@ -24,6 +24,7 @@ variables:
 before_script:
   - apt-get update -qy
   - apt-get install -y curl
+  - export PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
 
 fetch_code:
   stage: fetch_code
