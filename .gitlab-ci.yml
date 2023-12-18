@@ -29,6 +29,8 @@ before_script:
 fetch_code:
   stage: fetch_code
   script:
+    - bash --version
+    - type mkdir
     - mkdir my_directory
     - echo 'Fetching code from GitHub'
     - git clone -b master $GITHUB_REPO_URL
