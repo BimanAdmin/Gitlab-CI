@@ -33,9 +33,6 @@ fetch_code:
     - cd my_directory
     - echo 'Fetching code from GitHub'
     - git clone -b master $GITHUB_REPO_URL
-  artifacts:
-    paths:
-      - my_directory/
   tags: 
     - test
 
