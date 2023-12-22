@@ -72,14 +72,18 @@ pulumi_up:
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
     - pulumi config set aws:accessKey $AWS_ACCESS_KEY_ID
-    - pulumi login s3://$AWS_S3_BUCKET
     - pulumi config set aws:secretKey $AWS_SECRET_ACCESS_KEY
     - pulumi config set aws:region $AWS_DEFAULT_REGION
-    #- pulumi login s3://$AWS_S3_BUCKET
-    - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
-    - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
+    - pulumi login s3://$AWS_S3_BUCKET
+    - |
+      stack_list=$(pulumi stack ls --json | jq -r '.[].name')
+      stack_exists=$(echo "$stack_list" | grep -q "$PULUMI_STACK" && echo "true" || echo "false")
 
-    - if [ "$stackExists" == "false" ]; then pulumi stack init $PULUMI_STACK; else pulumi stack select $PULUMI_STACK; fi
+      if [ "$stack_exists" == "false" ]; then
+        pulumi stack init ${PULUMI_STACK}
+      else
+        pulumi stack select ${PULUMI_STACK}
+      fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     - sudo apt-get install -y nodejs
