@@ -78,10 +78,8 @@ pulumi_up:
       export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
       ./pulumi-up.sh
 
-post:
-  script:
-    - echo 'Cleaning up'
-    - echo 'Additional post-job commands go here'
-    - pulumi destroy --yes
+# after_script:
+#     - echo 'Cleaning up'
+#     - pulumi destroy --yes
 
-  when: always
+#   when: always
