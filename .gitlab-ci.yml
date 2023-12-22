@@ -67,6 +67,15 @@ install_app:
 pulumi_up:
   stage: pulumi_up
   script:
+    - >
+      stackList=$(pulumi stack ls --json | jq -r '.[].name');
+      stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo "true" || echo "false");
+
+      if [ "$stackExists" == "false" ]; then
+        pulumi stack init ${PULUMI_STACK}
+      else
+        pulumi stack select ${PULUMI_STACK}
+      fi
     - echo '#!/bin/bash' > pulumi-up.sh
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
@@ -75,14 +84,7 @@ pulumi_up:
     - pulumi config set aws:secretKey $AWS_SECRET_ACCESS_KEY
     - pulumi config set aws:region $AWS_DEFAULT_REGION
     - pulumi login s3://$AWS_S3_BUCKET
-    - >
-      stack_list=$(pulumi stack ls --json | jq -r '.[].name')
-      if echo "$stack_list" | grep -q "$PULUMI_STACK"; then
-        pulumi stack select ${PULUMI_STACK}
-      else
-        pulumi stack init ${PULUMI_STACK}
-      fi
-
+    
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - sudo apt update
