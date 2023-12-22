@@ -2,7 +2,6 @@ stages:
   - fetch_code
   - install_dependencies
   - pulumi_up
-  - post
 
 variables:
   AWS_REGION: 'us-east-1'
