@@ -35,9 +35,9 @@ before_script:
 install_dependencies:
   stage: install_dependencies
   script:
+    - export PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
     - apt-get install -y mkdir
     - curl -fsSL https://get.pulumi.com | sh
-    - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
   tags: 
     - test
   
