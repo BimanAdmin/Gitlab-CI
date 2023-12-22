@@ -4,7 +4,7 @@ stages:
 
 variables:
   AWS_REGION: 'us-east-1'
-  PULUMI_PATH: "/usr/local/bin"
+  PULUMI_PATH: "/usr/bin/bash"
   PULUMI_STACK: 'ec2automation-s3-gitlab'
   GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
