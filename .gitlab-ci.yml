@@ -77,12 +77,10 @@ pulumi_up:
     - pulumi login s3://$AWS_S3_BUCKET
     - |
       stack_list=$(pulumi stack ls --json | jq -r '.[].name')
-      stack_exists=$(echo "$stack_list" | grep -q "$PULUMI_STACK" && echo "true" || echo "false")
-
-      if [ "$stack_exists" == "false" ]; then
-        pulumi stack init ${PULUMI_STACK}
-      else
+      if echo "$stack_list" | grep -q "$PULUMI_STACK"; then
         pulumi stack select ${PULUMI_STACK}
+      else
+        pulumi stack init ${PULUMI_STACK}
       fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
