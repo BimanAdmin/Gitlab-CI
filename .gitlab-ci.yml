@@ -56,7 +56,7 @@ install_dependencies:
 
 pulumi_up:
   stage: pulumi_up
-    script:
+  script:
     - echo '#!/bin/bash' > pulumi-up.sh
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
@@ -78,5 +78,5 @@ pulumi_up:
     - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
     - ./pulumi-up.sh
 
-only:
-  - master
+  only:
+    - master
