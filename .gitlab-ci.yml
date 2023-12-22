@@ -8,12 +8,12 @@ variables:
   GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
   npm_PATH: "/usr/share/npm:$npm_PATH"
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID  # Add these variables in your GitLab CI/CD settings
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  # AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID  # Add these variables in your GitLab CI/CD settings
+  # AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
 
 before_script:
-  #- export AWS_ACCESS_KEY_ID=$(cat $AWS_ACCESS_KEY_ID)
-  #- export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY)
+  - export AWS_ACCESS_KEY_ID=$(cat $AWS_ACCESS_KEY_ID)
+  - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY)
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
 
@@ -21,7 +21,6 @@ install_dependencies:
   stage: install_dependencies
   script:
     - curl -fsSL https://get.pulumi.com | sh
-  #  - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
   tags: 
     - test
   
