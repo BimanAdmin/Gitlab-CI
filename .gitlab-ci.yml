@@ -30,7 +30,7 @@ install_dependencies:
   script:
     - export PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
     - curl -fsSL https://get.pulumi.com | sh
-    - export PATH="$PULUMI_PATH:$PATH"
+    - export PULUMI_PATH="$PULUMI_PATH:$PULUMI_PATH"
   tags: 
     - test
   
@@ -55,6 +55,7 @@ pulumi_up:
       pulumi up --yes
       EOF
     - chmod +x pulumi-up.sh
+    - export PULUMI_PATH="$PULUMI_PATH:$PULUMI_PATH"
     - |
       # Execute Pulumi up
       pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
