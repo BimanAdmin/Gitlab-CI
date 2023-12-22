@@ -20,8 +20,8 @@ before_script:
   - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY)
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
-  - apt-get update -y
-  - apt-get install -y curl
+  #- apt-get update -y
+  #- apt-get install -y curl
 
 # fetch_code:
 #   stage: fetch_code
