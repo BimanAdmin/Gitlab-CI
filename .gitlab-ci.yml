@@ -30,7 +30,6 @@ install_dependencies:
   script:
     #- export Dir_PATH="/bin:/usr/bin:/usr/local/bin:$Dir_PATH"
     - curl -fsSL https://get.pulumi.com | sh
-    - export PULUMI_PATH="$PULUMI_PATH:$PULUMI_PATH"
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
   tags: 
     - test
