@@ -11,8 +11,8 @@ variables:
   npm_PATH: "/usr/share/npm:$npm_PATH"
 
 before_script:
-  - apt-get update -qy
-  - apt-get install -y curl
+  - sudo apt-get update -qy
+  - sudo apt-get install -y curl
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
 
