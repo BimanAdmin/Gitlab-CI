@@ -46,7 +46,6 @@ pulumi_up:
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
-    - 
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
     - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
     - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
