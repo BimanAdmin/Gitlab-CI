@@ -32,9 +32,11 @@ pulumi_up:
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
-    - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
-
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region us-east-1  # Set your AWS region
     - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
+    - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
     - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
 
     - if [ "$stackExists" == "false" ]; then pulumi stack init $PULUMI_STACK; else pulumi stack select $PULUMI_STACK; fi
