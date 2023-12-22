@@ -1,11 +1,8 @@
 stages:
   - fetch_code
   - install_dependencies
-#  - pulumi_preview
   - pulumi_up
   - post_pipeline
-  # Uncomment the following stage if needed
-  # - execute_kubernetes_yaml
 
 variables:
   AWS_REGION: 'us-east-1'
@@ -24,7 +21,6 @@ variables:
 before_script:
   - apt-get update -qy
   - apt-get install -y curl
-  - apt-get install -y mkdir
 
 # fetch_code:
 #   stage: fetch_code
@@ -36,12 +32,13 @@ before_script:
 
 install_dependencies:
   stage: install_dependencies
+  tags: 
+    - test
   script:
     - curl -fsSL https://get.pulumi.com | sh
     - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
     
-  tags: 
-    - test
+  
 
 # pulumi_preview:
 #   stage: pulumi_preview
