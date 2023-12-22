@@ -11,10 +11,6 @@ variables:
   npm_PATH: "/usr/share/npm:$npm_PATH"
 
 before_script:
-  - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-  - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-  - aws configure set default.region us-east-1  # Set your AWS region
-
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
 
@@ -46,6 +42,9 @@ pulumi_up:
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region us-east-1  # Set your AWS region
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
     - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
     - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
