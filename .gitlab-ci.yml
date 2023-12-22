@@ -25,13 +25,13 @@ before_script:
   - apt-get update -qy
   - apt-get install -y curl
 
-fetch_code:
-  stage: fetch_code
-  script:
-    - echo 'Fetching code from GitHub'
-    - git clone -b master $GITHUB_REPO_URL
-  tags: 
-    - test
+# fetch_code:
+#   stage: fetch_code
+#   script:
+#     - echo 'Fetching code from GitHub'
+#     - git clone -b master $GITHUB_REPO_URL
+#   tags: 
+#     - test
 
 install_dependencies:
   stage: install_dependencies
