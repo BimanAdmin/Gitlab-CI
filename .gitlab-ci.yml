@@ -13,8 +13,6 @@ before_script:
   - sudo apt-get update -qy
   - sudo apt-get install -y curl
   - sudo apt-get install -y unzip
-  - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
-  - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
 
 install_dependencies:
   stage: install_dependencies
@@ -42,9 +40,6 @@ pulumi_up:
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
-    # - aws configure set AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID"
-    # - aws configure set AWS_SECRET_ACCESS_KEY "$AWS_SECRET_ACCESS_KEY"
-    # - aws configure set region "$AWS_DEFAULT_REGION"  # Set your AWS region
     - pulumi config set aws:accessKey $AWS_ACCESS_KEY_ID
     - pulumi config set aws:secretKey $AWS_SECRET_ACCESS_KEY
     - pulumi config set aws:region $AWS_DEFAULT_REGION
