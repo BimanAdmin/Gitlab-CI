@@ -4,15 +4,11 @@ stages:
 
 variables:
   AWS_REGION: 'us-east-1'
-  # AWS_ACCESS_KEY_ID: '$(AWS_ACCESS_KEY_ID)'
-  # AWS_SECRET_ACCESS_KEY: '$(AWS_SECRET_ACCESS_KEY)'
-  # AWS_CREDENTIALS_ID: '$(AWS_CREDENTIALS_ID)'
+
   PULUMI_STACK: 'ec2automation-s3-gitlab'
   GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
   npm_PATH: "/usr/share/npm:$npm_PATH"
-  #PULUMI_CONFIG_PASSPHRASE: '$(PULUMI_CONFIG_PASSPHRASE)'
-  #PULUMI_ACCESS_TOKEN: '$(PULUMI_ACCESS_TOKEN)'
   NODE_VERSION: '14'
 
 before_script:
