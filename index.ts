@@ -1,4 +1,5 @@
 import * as aws from "@pulumi/aws";
+import * as gitlab from "@pulumi/gitlab";
 
 
 

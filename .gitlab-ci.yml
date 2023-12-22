@@ -35,6 +35,7 @@ install_dependencies:
   tags: 
     - test
   script:
+    - apt-get install -y mkdir
     - curl -fsSL https://get.pulumi.com | sh
     - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
     
@@ -69,7 +70,7 @@ pulumi_up:
     - npm install
     - node -v
     - npm -v
-    - npm install @pulumi/pulumi && npm install @pulumi/aws
+    - npm install @pulumi/pulumi && npm install @pulumi/aws && npm install @pulumi/gitlab
     - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
     - ./pulumi-up.sh
   tags: 
