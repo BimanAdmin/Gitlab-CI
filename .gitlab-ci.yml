@@ -1,5 +1,4 @@
 stages:
-  - fetch_code
   - install_dependencies
   - pulumi_up
 
