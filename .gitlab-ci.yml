@@ -21,6 +21,7 @@ install_dependencies:
   stage: install_dependencies
   script:
     - curl -fsSL https://get.pulumi.com | sh
+    - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
   tags: 
     - test
   
@@ -38,7 +39,6 @@ install_dependencies:
 pulumi_up:
   stage: pulumi_up
   script:
-    - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
     - |
       # Create a script file for Pulumi up command
       cat <<EOF > pulumi-up.sh
