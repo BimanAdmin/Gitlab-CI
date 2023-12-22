@@ -6,7 +6,6 @@ stages:
 variables:
   #AWS_REGION: 'us-east-1'
   PULUMI_STACK: 'ec2automation-s3-gitlab'
-  GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab-01' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
   npm_PATH: "/usr/share/npm:$npm_PATH"
 
@@ -43,8 +42,8 @@ pulumi_up:
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
-    - aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-    - aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+    - aws configure set AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID"
+    - aws configure set AWS_SECRET_ACCESS_KEY "$AWS_SECRET_ACCESS_KEY"
     - aws configure set default.region us-east-1  # Set your AWS region
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
     - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
