@@ -6,7 +6,7 @@ variables:
   AWS_REGION: 'us-east-1'
   PULUMI_STACK: 'ec2automation-s3-gitlab'
   GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
-  PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
+  PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab-01' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
   npm_PATH: "/usr/share/npm:$npm_PATH"
 
 before_script:
@@ -62,7 +62,7 @@ pulumi_up:
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
-    - pulumi login s3://your-pulumi-state-bucket?region=us-east-1
+    - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
 
     - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
     - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
