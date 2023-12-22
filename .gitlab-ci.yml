@@ -19,6 +19,9 @@ variables:
   NODE_VERSION: '14'
 
 before_script:
+  - export AWS_ACCESS_KEY_ID=$(cat $AWS_ACCESS_KEY_ID)
+  - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY)
+  - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - apt-get update -qy
   - apt-get install -y curl
 
@@ -32,13 +35,12 @@ before_script:
 
 install_dependencies:
   stage: install_dependencies
-  tags: 
-    - test
   script:
     - apt-get install -y mkdir
     - curl -fsSL https://get.pulumi.com | sh
     - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
-    
+  tags: 
+    - test
   
 
 # pulumi_preview:
@@ -54,30 +56,38 @@ install_dependencies:
 pulumi_up:
   stage: pulumi_up
   script:
-    - echo 'Running Pulumi Up'
-    - echo '#!/bin/bash' > pulumi-up.sh
-    - echo 'pulumi up --yes' >> pulumi-up.sh
+    - |
+      # Create a script file for Pulumi up command
+      cat <<EOF > pulumi-up.sh
+      #!/bin/bash
+      pulumi up --yes
+      EOF
     - chmod +x pulumi-up.sh
-    - export AWS_ACCESS_KEY_ID=$(cat $AWS_ACCESS_KEY_ID_FILE)
-    - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY_FILE)
-    - pulumi login s3://sandbox-pulumi-state-new?region=us-east-1
-    - stackList=$(pulumi stack ls --json | tr -d '\n')
-    - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
-    - if [ "$stackExists" == "false" ]; then pulumi stack init $PULUMI_STACK; else pulumi stack select $PULUMI_STACK; fi
-    - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-    - sudo apt-get install -y nodejs
-    - sudo apt update
-    - npm install
-    - node -v
-    - npm -v
-    - npm install @pulumi/pulumi && npm install @pulumi/aws && npm install @pulumi/gitlab
-    - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
-    - ./pulumi-up.sh
-  tags: 
-    - test
+    - |
+      # Execute Pulumi up
+      pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
+      export PATH="/var/lib/jenkins/.pulumi/bin:$PATH"
+      export npm_PATH="/usr/share/npm:$npm_PATH"
+      npm install
+      npm install @pulumi/pulumi && npm install @pulumi/aws
+      stackList=$(pulumi stack ls --json | tr -d '[:space:]')
+      if [[ $stackList != *$PULUMI_STACK* ]]; then
+        pulumi stack init $PULUMI_STACK
+      else
+        pulumi stack select $PULUMI_STACK
+      fi
+      export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
+      ./pulumi-up.sh
 
-post_pipeline:
-  stage: post_pipeline
-  script:
-    - echo 'Post-pipeline actions'
-    - if [ "$CI_COMMIT_RESULT" != "success" ]; then pulumi destroy --yes; fi
+after_script:
+  - echo 'Cleaning up'
+
+post:
+  failure:
+    script:
+      - echo 'Destroying EKS cluster due to pipeline failure'
+      - pulumi destroy --yes
+
+  success:
+    script:
+      - echo 'Pipeline executed successfully!'
