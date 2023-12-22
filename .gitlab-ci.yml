@@ -4,7 +4,7 @@ stages:
 
 variables:
   AWS_REGION: 'us-east-1'
-  PULUMI_PATH: "/usr/local/bin/"
+#  PULUMI_PATH: "/usr/local/bin/"
   PULUMI_STACK: 'ec2automation-s3-gitlab'
   GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
@@ -55,7 +55,7 @@ pulumi_up:
       pulumi up --yes
       EOF
     - chmod +x pulumi-up.sh
-    - export PULUMI_PATH="$PULUMI_PATH:$PULUMI_PATH"
+    - curl -fsSL https://get.pulumi.com | sh
     - |
       # Execute Pulumi up
       pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
@@ -71,6 +71,9 @@ pulumi_up:
       fi
       export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
       ./pulumi-up.sh
+
+  tags: 
+    - test
 
 # after_script:
 #     - echo 'Cleaning up'
