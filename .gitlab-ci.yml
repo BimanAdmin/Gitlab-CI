@@ -12,7 +12,7 @@ variables:
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
   npm_PATH: "/usr/share/npm:$npm_PATH"
   #PULUMI_CONFIG_PASSPHRASE: '$(PULUMI_CONFIG_PASSPHRASE)'
-  PULUMI_ACCESS_TOKEN: '$(PULUMI_ACCESS_TOKEN)'
+  #PULUMI_ACCESS_TOKEN: '$(PULUMI_ACCESS_TOKEN)'
   NODE_VERSION: '14'
 
 before_script:
@@ -20,8 +20,8 @@ before_script:
   - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY)
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
-  - sudo apt-get update -y
-  - sudo apt-get install -y curl
+  - apt-get update -y
+  - apt-get install -y curl
 
 # fetch_code:
 #   stage: fetch_code
