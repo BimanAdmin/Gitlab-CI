@@ -55,8 +55,8 @@ install_dependencies:
 #     - test
 
 pulumi_up:
-  stage: pulumi_deploy
-  script:
+  stage: pulumi_up
+    script:
     - echo '#!/bin/bash' > pulumi-up.sh
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
