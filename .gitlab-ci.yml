@@ -39,18 +39,14 @@ install_dependencies:
 pulumi_up:
   stage: pulumi_up
   script:
-    # - |
-    #   # Create a script file for Pulumi up command
-    #   cat <<EOF > pulumi-up.sh
-    #   #!/bin/bash
-    #   pulumi up --yes
-    #   EOF
-    # - chmod +x pulumi-up.sh
-    - echo '#!/bin/bash' > pulumi-up.sh
-    - echo 'pulumi up --yes' >> pulumi-up.sh
-    - chmod +x pulumi-up.sh
-
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
+    - |
+      # Create a script file for Pulumi up command
+      cat <<EOF > pulumi-up.sh
+      #!/bin/bash
+      pulumi up --yes
+      EOF
+    - chmod +x pulumi-up.sh
     - |
       # Execute Pulumi up
       pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
