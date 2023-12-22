@@ -29,6 +29,7 @@ fetch_code:
   stage: fetch_code
   script:
     - echo 'Fetching code from GitHub'
+    - apt-get install -y coreutils
     - git clone -b master $GITHUB_REPO_URL
   tags: 
     - test
@@ -38,7 +39,7 @@ install_dependencies:
   script:
     - curl -fsSL https://get.pulumi.com | sh
     - export PATH=$PATH:/var/lib/jenkins/.pulumi/bin
-    - apt-get install -y coreutils
+    
   tags: 
     - test
 
