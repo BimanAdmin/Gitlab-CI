@@ -4,6 +4,7 @@ stages:
 
 variables:
   AWS_REGION: 'us-east-1'
+  PULUMI_PATH: "/usr/local/bin"
   PULUMI_STACK: 'ec2automation-s3-gitlab'
   GITHUB_REPO_URL: 'https://gitlab.com/gitlab-cicd6911650/pulumi-automation.git'
   PULUMI_STATE_BUCKET: 'sandbox-pulumi-state-gitlab' # Set your Pulumi state bucket URL AWS_CREDENTIALS_ID
@@ -15,7 +16,6 @@ before_script:
   - export AWS_SECRET_ACCESS_KEY=$(cat $AWS_SECRET_ACCESS_KEY)
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
-  - export PULUMI_PATH=$(cat $PULUMI_PATH)
 
 # fetch_code:
 #   stage: fetch_code
@@ -30,6 +30,7 @@ install_dependencies:
   script:
     - export PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
     - curl -fsSL https://get.pulumi.com | sh
+    - export PATH="$PULUMI_PATH:$PATH"
   tags: 
     - test
   
