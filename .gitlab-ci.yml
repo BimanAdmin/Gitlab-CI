@@ -28,9 +28,10 @@ before_script:
 install_dependencies:
   stage: install_dependencies
   script:
-    - export PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
+    #- export Dir_PATH="/bin:/usr/bin:/usr/local/bin:$Dir_PATH"
     - curl -fsSL https://get.pulumi.com | sh
     - export PULUMI_PATH="$PULUMI_PATH:$PULUMI_PATH"
+    - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
   tags: 
     - test
   
@@ -55,7 +56,6 @@ pulumi_up:
       pulumi up --yes
       EOF
     - chmod +x pulumi-up.sh
-    - curl -fsSL https://get.pulumi.com | sh
     - |
       # Execute Pulumi up
       pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
