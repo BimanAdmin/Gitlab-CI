@@ -1,5 +1,6 @@
 stages:
   - install_dependencies
+  - install_app
   - pulumi_up
 
 variables:
@@ -21,6 +22,15 @@ install_dependencies:
   stage: install_dependencies
   script:
     - curl -fsSL https://get.pulumi.com | sh
+    
+  tags: 
+    - test
+
+install_app:
+  stage: install_app
+  script:
+    - apt-get update -qy
+    - apt-get install -y curl
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     - unzip awscliv2.zip
     - sudo ./aws/install
