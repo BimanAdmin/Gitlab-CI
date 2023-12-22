@@ -79,15 +79,10 @@ pulumi_up:
       export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
       ./pulumi-up.sh
 
-after_script:
-  - echo 'Cleaning up'
-
 post:
-  failure:
-    script:
-      - echo 'Destroying EKS cluster due to pipeline failure'
-      - pulumi destroy --yes
+  script:
+    - echo 'Cleaning up'
+    - echo 'Additional post-job commands go here'
+    - pulumi destroy --yes
 
-  success:
-    script:
-      - echo 'Pipeline executed successfully!'
+  when: always
