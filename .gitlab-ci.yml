@@ -11,6 +11,8 @@ variables:
   npm_PATH: "/usr/share/npm:$npm_PATH"
 
 before_script:
+  - apt-get update -qy
+  - apt-get install -y curl
   - export PULUMI_CONFIG_PASSPHRASE=$(cat $PULUMI_CONFIG_PASSPHRASE)
   - export PULUMI_ACCESS_TOKEN=$(cat $PULUMI_ACCESS_TOKEN)
 
@@ -25,8 +27,6 @@ install_dependencies:
 install_app:
   stage: install_app
   script:
-    - apt-get update -qy
-    - apt-get install -y curl
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     - unzip awscliv2.zip
     - sudo ./aws/install
