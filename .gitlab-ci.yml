@@ -25,42 +25,12 @@ install_dependencies:
     - test
   
 
-# pulumi_up:
-#   stage: pulumi_up
-#   script:
-#     - |
-#       # Create a script file for Pulumi up command
-#       cat <<EOF > pulumi-up.sh
-#       #!/bin/bash
-#       pulumi up --yes
-#       EOF
-#     - chmod +x pulumi-up.sh
-#     - |
-#       # Execute Pulumi up
-#       pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
-#       export npm_PATH="/usr/share/npm:$npm_PATH"
-#       npm install
-#       npm install @pulumi/pulumi && npm install @pulumi/aws
-#       stackList=$(pulumi stack ls --json | tr -d '[:space:]')
-#       if [[ $stackList != *$PULUMI_STACK* ]]; then
-#         pulumi stack init $PULUMI_STACK
-#       else
-#         pulumi stack select $PULUMI_STACK
-#       fi
-#       export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
-#       ./pulumi-up.sh
-
-#   tags: 
-#     - test
-
 pulumi_up:
   stage: pulumi_up
   script:
     - echo '#!/bin/bash' > pulumi-up.sh
     - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
-    - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-    - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
 
