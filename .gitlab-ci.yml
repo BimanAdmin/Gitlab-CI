@@ -24,6 +24,7 @@ variables:
 before_script:
   - apt-get update -qy
   - apt-get install -y curl
+  - apt-get install -y mkdir
 
 # fetch_code:
 #   stage: fetch_code
