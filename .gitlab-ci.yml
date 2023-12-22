@@ -26,47 +26,57 @@ install_dependencies:
     - test
   
 
-# pulumi_preview:
-#   stage: pulumi_preview
+# pulumi_up:
+#   stage: pulumi_up
 #   script:
-#     - echo 'Running Pulumi Preview'
-#     - pulumi preview --json > pulumi-preview-output.json
-#     - pulumi stack export > pulumi-current-state.json
-#     - aws s3 cp pulumi-current-state.json s3://${PULUMI_STATE_BUCKET}/pulumi-current-state.json
-#     # Add logic to filter changes as per the Jenkins pipeline code
-#     - cat pulumi-preview-output.json
+#     - |
+#       # Create a script file for Pulumi up command
+#       cat <<EOF > pulumi-up.sh
+#       #!/bin/bash
+#       pulumi up --yes
+#       EOF
+#     - chmod +x pulumi-up.sh
+#     - |
+#       # Execute Pulumi up
+#       pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
+#       export npm_PATH="/usr/share/npm:$npm_PATH"
+#       npm install
+#       npm install @pulumi/pulumi && npm install @pulumi/aws
+#       stackList=$(pulumi stack ls --json | tr -d '[:space:]')
+#       if [[ $stackList != *$PULUMI_STACK* ]]; then
+#         pulumi stack init $PULUMI_STACK
+#       else
+#         pulumi stack select $PULUMI_STACK
+#       fi
+#       export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
+#       ./pulumi-up.sh
+
+#   tags: 
+#     - test
 
 pulumi_up:
-  stage: pulumi_up
+  stage: pulumi_deploy
   script:
-    - |
-      # Create a script file for Pulumi up command
-      cat <<EOF > pulumi-up.sh
-      #!/bin/bash
-      pulumi up --yes
-      EOF
+    - echo '#!/bin/bash' > pulumi-up.sh
+    - echo 'pulumi up --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
-    - |
-      # Execute Pulumi up
-      pulumi login s3://${PULUMI_STATE_BUCKET}/${PULUMI_STACK}
-    #  export PATH="/var/lib/jenkins/.pulumi/bin:$PATH"
-      export npm_PATH="/usr/share/npm:$npm_PATH"
-      npm install
-      npm install @pulumi/pulumi && npm install @pulumi/aws
-      stackList=$(pulumi stack ls --json | tr -d '[:space:]')
-      if [[ $stackList != *$PULUMI_STACK* ]]; then
-        pulumi stack init $PULUMI_STACK
-      else
-        pulumi stack select $PULUMI_STACK
-      fi
-      export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
-      ./pulumi-up.sh
 
-  tags: 
-    - test
+    - pulumi login s3://your-pulumi-state-bucket?region=us-east-1
 
-# after_script:
-#     - echo 'Cleaning up'
-#     - pulumi destroy --yes
+    - stackList=$(pulumi stack ls --json | tr -d '[:space:]')
+    - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
 
-#   when: always
+    - if [ "$stackExists" == "false" ]; then pulumi stack init $PULUMI_STACK; else pulumi stack select $PULUMI_STACK; fi
+
+    - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+    - sudo apt-get install -y nodejs
+    - sudo apt update
+    - npm install
+    - node -v
+    - npm -v
+    - npm install @pulumi/pulumi @pulumi/aws
+    - export PULUMI_CONFIG_PASSPHRASE="$PULUMI_CONFIG_PASSPHRASE"
+    - ./pulumi-up.sh
+
+only:
+  - master
