@@ -85,11 +85,11 @@ pulumi_up:
     # - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     # - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
     # - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
-    - pulumi login \
-        --cloud-url s3://sandbox-pulumi-state-gitlab-01?region=us-east-1 \
-        --secret $AWS_SECRET_ACCESS_KEY \
-        --secret-access-key-env AWS_SECRET_ACCESS_KEY \
-        --access $AWS_ACCESS_KEY_ID \
+    - pulumi login 
+        --cloud-url s3://sandbox-pulumi-state-gitlab-01?region=us-east-1 
+        --secret $AWS_SECRET_ACCESS_KEY 
+        --secret-access-key-env AWS_SECRET_ACCESS_KEY 
+        --access $AWS_ACCESS_KEY_ID 
         --access-key-id-env AWS_ACCESS_KEY_ID
     - |
       stackList=$(pulumi stack ls --json | jq -r '.[].name');
