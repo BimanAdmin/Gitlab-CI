@@ -1,3 +1,9 @@
+image:
+  name: pulumi/pulumi:v0.17.10
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
 stages:
   - install_dependencies
   - install_app
@@ -74,7 +80,7 @@ pulumi_up:
     
     - pulumi config set aws:accessKey $AWS_ACCESS_KEY_ID
     - pulumi config set aws:secretKey $AWS_SECRET_ACCESS_KEY
-    - 'pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1'
+    - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
 
     - |
       stackList=$(pulumi stack ls --json | jq -r '.[].name');
