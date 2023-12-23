@@ -81,8 +81,11 @@ pulumi_up:
     # - pulumi config set aws:accessKey $AWS_ACCESS_KEY_ID
     # - pulumi config set aws:secretKey $AWS_SECRET_ACCESS_KEY
     #- pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
-    - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-    - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+    # - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+    # - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region us-east-1
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
 
     - |
