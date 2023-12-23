@@ -58,7 +58,6 @@ pulumi_up:
         pulumi stack init "$PULUMI_STACK"
       else
         pulumi stack select "$PULUMI_STACK"
-      fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     - sudo apt-get install -y nodejs
