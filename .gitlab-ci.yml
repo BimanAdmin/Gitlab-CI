@@ -52,10 +52,10 @@ pulumi_up:
     - stackExists=$(echo "$PULUMI_STACK_LIST" | grep -c "$PULUMI_STACK")
     #- stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
     - | 
-      if [ "$stackExists" = false ]; then
-        pulumi stack init $PULUMI_STACK
+      if [ "$stackExists" -eq 0 ]; then
+        pulumi stack init ${PULUMI_STACK}
       else
-        pulumi stack select $PULUMI_STACK
+        pulumi stack select ${PULUMI_STACK}
       fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
