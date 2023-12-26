@@ -69,7 +69,7 @@ pulumi_up:
     #     pulumi stack init "$PULUMI_STACK"
     #   fi
     - |
-    currentStack=$(pulumi stack --show-name)
+      currentStack=$(pulumi stack --show-name)
 
     # Check if the desired stack exists
       if [[ "$currentStack" != "$PULUMI_STACK" ]]; then
