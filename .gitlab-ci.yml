@@ -65,7 +65,7 @@ pulumi_up:
         echo "Stack $PULUMI_STACK is not exists. Initializing..."
         pulumi stack init "$PULUMI_STACK"
       else
-        echo "Stack $PULUMI_STACK does not exist.Selecting ..."
+        echo "Stack $PULUMI_STACK is exist.Selecting ..."
         pulumi stack select "$PULUMI_STACK"
       fi
 
