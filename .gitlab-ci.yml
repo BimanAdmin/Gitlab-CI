@@ -61,12 +61,10 @@ pulumi_up:
       stackNames=$(echo "$stackList" | jq -r '.[].name')
 
       # Check if the desired stack exists
-      if [[ "$stackNames" == *"$PULUMI_STACK"* ]]; then
-        echo "Stack $PULUMI_STACK exists. Selecting..."
-        pulumi stack select $PULUMI_STACK
-      else
-        echo "Stack $PULUMI_STACK does not exist. Initializing..."
+      if [ -z "$stackNames" ]; then
         pulumi stack init "$PULUMI_STACK"
+      else
+        pulumi stack select "$PULUMI_STACK"
       fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
