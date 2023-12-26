@@ -51,7 +51,7 @@ pulumi_up:
     - PULUMI_STACK_LIST=$(pulumi stack ls --json | tr -d '\n' | tr -d '[:space:]')
     - stackExists=$(echo "$PULUMI_STACK_LIST")
     - | 
-      if [[ ! $(pulumi stack ls --json) =~ .*${PULUMI_STACK}.* ]]; then
+      if [ "$stackExists" -eq 0 ]; then
         pulumi stack init ${PULUMI_STACK}
       else
         pulumi stack select ${PULUMI_STACK}
