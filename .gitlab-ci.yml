@@ -68,33 +68,20 @@ pulumi_up:
     #     echo "Stack $PULUMI_STACK does not exist. Initializing..."
     #     pulumi stack init "$PULUMI_STACK"
     #   fi
-    -  |
-      set -e
+    - |
+    currentStack=$(pulumi stack --show-name)
 
-      # Get the list of existing stacks
-      stackList=$(pulumi stack ls --json || echo "[]")
-
-      # Extract stack names using jq
-      stackNames=$(echo "$stackList" | jq -r '.[].name')
-
-      # Check if the desired stack exists
-      if [[ "$stackNames" == *"$PULUMI_STACK"* ]]; then
-        echo "Stack $PULUMI_STACK exists."
-      else
-        echo "Stack $PULUMI_STACK does not exist. Initializing..."
-        pulumi stack init "$PULUMI_STACK"
-      fi
-
-      # Check if the desired stack is already selected
-      currentStack=$(pulumi stack --show-name)
-
+    # Check if the desired stack exists
       if [[ "$currentStack" != "$PULUMI_STACK" ]]; then
-        echo "Selecting stack $PULUMI_STACK..."
-        pulumi stack select "$PULUMI_STACK"
+        echo "Stack $PULUMI_STACK does not match the current stack $currentStack. Initializing..."
+        pulumi stack init "$PULUMI_STACK"
       else
-        echo "Already selected stack $PULUMI_STACK."
+        echo "Already on stack $PULUMI_STACK."
       fi
-      
+
+      # Explicitly select the stack
+      pulumi stack select "$PULUMI_STACK"
+
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - sudo apt update
