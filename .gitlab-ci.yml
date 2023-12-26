@@ -52,7 +52,7 @@ pulumi_up:
 
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
 
-    - stackList=$(pulumi stack ls --json | tr -d '\n')
+    - PULUMI_STACK_LIST=$(pulumi stack ls --json | tr -d '\n' | tr -d '[:space:]')
     # - stackExists=$(echo "$stackList" | grep -c "$PULUMI_STACK")
     - stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
     - if [ "$stackExists" -eq 0 ]; then
