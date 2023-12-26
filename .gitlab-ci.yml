@@ -51,11 +51,13 @@ pulumi_up:
     # - PULUMI_STACK_LIST=$(pulumi stack ls --json | tr -d '\n' | tr -d '[:space:]')
     # - stackExists=$(echo "$PULUMI_STACK_LIST")
     - |
-      stackList=$(pulumi stack ls --json | jq -r '.[].name' | tr -d '\n' | tr -d '[:space:]')
-      if ! echo "$stackList" | grep -q "$PULUMI_STACK"; then
-        pulumi stack init ${PULUMI_STACK}
+      stackList=$(pulumi stack ls --json | jq -r '.[].name')
+      stackExists=$(echo "$stackList" | grep -w "$PULUMI_STACK" || true)
+
+      if [ -z "$stackExists" ]; then
+        pulumi stack init "$PULUMI_STACK"
       else
-        pulumi stack select ${PULUMI_STACK}
+        pulumi stack select "$PULUMI_STACK"
       fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
