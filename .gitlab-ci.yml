@@ -52,7 +52,7 @@ pulumi_up:
     - stackExists=$(echo "$PULUMI_STACK_LIST" | grep -c "$PULUMI_STACK")
     #- stackExists=$(echo "$stackList" | grep -q "$PULUMI_STACK" && echo true || echo false)
     - | 
-      if [ "$stackExists" -eq 0 ]; then
+      if [!stackExists]; then
         pulumi stack init ${PULUMI_STACK}
       else
         pulumi stack select ${PULUMI_STACK}
