@@ -63,10 +63,10 @@ pulumi_up:
       # Check if the desired stack exists
       if [[ "$stackNames" != "$PULUMI_STACK" ]]; then
         echo "Stack $PULUMI_STACK is not exists. Initializing..."
-        pulumi stack init $PULUMI_STACK
+        pulumi stack select $PULUMI_STACK
       else
         echo "Stack $PULUMI_STACK is exist.Selecting ..."
-        pulumi stack select $PULUMI_STACK
+        pulumi stack init $PULUMI_STACK
       fi
 
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
