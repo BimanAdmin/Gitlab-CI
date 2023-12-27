@@ -55,13 +55,13 @@ pulumi_up:
     - |
       set -e
 
-    #     Get the list of existing stacks
+      
       stackList=$(pulumi stack ls --json | jq -r '.[].name')
 
-    # Extract stack names using jq
+      
       stackNames=$(echo "$stackList" | jq -r '.[].name')
 
-    # Check if the desired stack exists
+      
       if [[ "$stackNames" != "$PULUMI_STACK" ]]; then
         echo "Stack here is not exists. Initializing now..."
         pulumi stack init "$PULUMI_STACK"
