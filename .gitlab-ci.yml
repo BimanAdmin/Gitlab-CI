@@ -39,7 +39,7 @@ pulumi_up:
   script:
     
     - echo '#!/bin/bash' > pulumi-up.sh
-    - echo 'pulumi up --yes' >> pulumi-up.sh
+    - echo 'pulumi destroy --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
     
@@ -52,15 +52,29 @@ pulumi_up:
     # - PULUMI_STACK_LIST=$(pulumi stack ls --json | tr -d '\n' | tr -d '[:space:]')
     #- stackList=$(pulumi stack ls --json | jq -r '.[].name')
     # - stackExists=$(echo "$PULUMI_STACK_LIST")
+    # - |
+    #   set -e
+
+    #   # Get the list of existing stacks
+    #   stackList=$(pulumi stack ls --json | jq -r '.[].name')
+
+    #   # Extract stack names using jq
+    #   stackNames=$(echo "$stackList" | jq -r '.[].name')
+
+    #   # Check if the desired stack exists
+    #   if [[ "$stackNames" != "$PULUMI_STACK" ]]; then
+    #     echo "Stack here is not exists. Initializing now..."
+    #     pulumi stack init "$PULUMI_STACK"
+    #   else
+    #     echo "Stack here is exist. Selecting now ..."
+    #     pulumi stack select "$PULUMI_STACK"
+    #   fi
     - |
       set -e
-
       # Get the list of existing stacks
       stackList=$(pulumi stack ls --json | jq -r '.[].name')
-
       # Extract stack names using jq
       stackNames=$(echo "$stackList" | jq -r '.[].name')
-
       # Check if the desired stack exists
       if [[ "$stackNames" != "$PULUMI_STACK" ]]; then
         echo "Stack here is not exists. Initializing now..."
