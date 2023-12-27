@@ -48,12 +48,8 @@ pulumi_up:
     - export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
 
     - pulumi login s3://sandbox-pulumi-state-gitlab-01?region=us-east-1
-
-    # - PULUMI_STACK_LIST=$(pulumi stack ls --json | tr -d '\n' | tr -d '[:space:]')
-    #- stackList=$(pulumi stack ls --json | jq -r '.[].name')
-    # - stackExists=$(echo "$PULUMI_STACK_LIST")
     - |
-      set -e
+      
 
       # Get the list of existing stacks
       stackList=$(pulumi stack ls --json | jq -r '.[].name')
