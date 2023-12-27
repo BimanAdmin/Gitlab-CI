@@ -51,24 +51,38 @@ pulumi_up:
     # - PULUMI_STACK_LIST=$(pulumi stack ls --json | tr -d '\n' | tr -d '[:space:]')
     #- stackList=$(pulumi stack ls --json | jq -r '.[].name')
     # - stackExists=$(echo "$PULUMI_STACK_LIST")
+    # - |
+    #   set -e
+
+    #   # Get the list of existing stacks
+    #   stackList=$(pulumi stack ls --json | jq -r '.[].name')
+
+    #   # Extract stack names using jq
+    #   stackNames=$(echo "$stackList" | jq -r '.[].name')
+
+    #   # Check if the desired stack exists
+    #   if [[ "$stackNames" != "$PULUMI_STACK" ]]; then
+    #     echo "Stack here is not exists. Initializing now..."
+    #     pulumi stack init "$PULUMI_STACK"
+    #   else
+    #     echo "Stack here is exist. Selecting now ..."
+    #     pulumi stack select "$PULUMI_STACK"
+    #   fi
     - |
       set -e
 
       # Get the list of existing stacks
       stackList=$(pulumi stack ls --json | jq -r '.[].name')
 
-      # Extract stack names using jq
-      stackNames=$(echo "$stackList" | jq -r '.[].name')
-
       # Check if the desired stack exists
-      if [[ "$stackNames" != "$PULUMI_STACK" ]]; then
-        echo "Stack here is not exists. Initializing now..."
+      if [[ ! "$stackList" =~ "$PULUMI_STACK" ]]; then
+        echo "Stack does not exist. Initializing now..."
         pulumi stack init "$PULUMI_STACK"
       else
-        echo "Stack here is exist. Selecting now ..."
+        echo "Stack exists. Selecting now ..."
         pulumi stack select "$PULUMI_STACK"
       fi
-
+      
     - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - sudo apt update
