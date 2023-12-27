@@ -53,7 +53,6 @@ pulumi_up:
     - stackList=$(pulumi stack ls --json | jq -r '.[].name')
     - stackExists=$(echo "$PULUMI_STACK_LIST")
     - |
-      set -e
 
       # Get the list of existing stacks
       stackList=$(pulumi stack ls --json | jq -r '.[].name')
