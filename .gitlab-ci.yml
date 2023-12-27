@@ -69,8 +69,9 @@ pulumi_up:
     #     echo "Stack here is exist. Selecting now ..."
     #     pulumi stack select "$PULUMI_STACK"
     #   fi
+    - set -e
     - |
-      set -e
+      
       # Get the list of existing stacks
       stackList=$(pulumi stack ls --json | jq -r '.[].name')
       # Extract stack names using jq
