@@ -10,7 +10,7 @@ const group = new aws.ec2.SecurityGroup("web-secgrp", {
 });
 
 const server = new aws.ec2.Instance("ansibleserver", {
-    instanceType: "t2.medium",
+    instanceType: "t2.micro",
     securityGroups: [ group.name ], // reference the security group resource above
     ami: "ami-0fc5d935ebf8bc3bc",
     keyName:"ec2-automation-key-new",
@@ -25,7 +25,7 @@ const server = new aws.ec2.Instance("ansibleserver", {
               sudo ./aws/install
               sudo yum install -y ansible`, // installing ansible
     tags: {
-        Name: "ansible-server-02",
+        Name: "ansible-server-03",
     },          
 
     
