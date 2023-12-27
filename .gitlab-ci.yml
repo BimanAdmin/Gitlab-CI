@@ -39,7 +39,7 @@ pulumi_up:
   script:
     
     - echo '#!/bin/bash' > pulumi-up.sh
-    - echo 'pulumi up --yes' >> pulumi-up.sh
+    - echo 'pulumi destroy --yes' >> pulumi-up.sh
     - chmod +x pulumi-up.sh
     - export PATH="/home/gitlab-runner/.pulumi/bin:$PATH"
     
