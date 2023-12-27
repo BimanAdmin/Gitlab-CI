@@ -25,7 +25,7 @@ const server = new aws.ec2.Instance("ansibleserver", {
               sudo ./aws/install
               sudo yum install -y ansible`, // installing ansible
     tags: {
-        Name: "ansible-server-01",
+        Name: "ansible-server-02",
     },          
 
     
